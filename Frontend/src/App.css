@@ -1,1 +1,34 @@
 /* @import "tailwindcss"; */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.nav-left a {
+  font-size: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #000;
+}
+
+.nav-center {
+  flex: 1;
+  text-align: center;
+}
+
+.nav-right a, .nav-center a {
+  margin: 0 10px;
+  text-decoration: none;
+  color: #333;
+}
+
+.btn-tiny {
+  background: none;
+  border: none;
+  color: #0077ff;
+  cursor: pointer;
+}

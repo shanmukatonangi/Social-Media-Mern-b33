@@ -1,47 +1,39 @@
-import axios from 'axios'
-import React, { useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useContext } from 'react';
+import API from '../api';
+import { AuthContext } from '../contexts/AuthContext';
+import { useNavigate, Link } from 'react-router-dom';
 
-const Register = () => {
-    let username=useRef()
-    let email=useRef()
-    let password=useRef()
-    let navigate = useNavigate()
+export default function Register() {
+  const { login } = useContext(AuthContext);
+  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const nav = useNavigate();
 
-async  function handleSubmit(e){
-  try {
-     e.preventDefault()
-
-let user={
-    username:username.current.value,
-    email:email.current.value,
-    password:password.current.value
-}
-
-await axios.post("http://localhost:8000/api/users/register",user)
-alert("Registration Successful")
-navigate('/login')
-  } catch (error) {
-    console.log(error);
-    
-  }
-
-
-
-  }
-
+  const submit = async (e) => {
+    e.preventDefault();
+    try {
+      const resp = await API.post('/auth/register', { name, username, email, password });
+      login(resp.data);
+      nav('/');
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.msg || 'Register failed');
+    }
+  };
 
   return (
-    <div>
-     <h1>Register</h1>
-        <form>
-            <input type="text" placeholder='Username' ref={username} />
-            <input type="email" placeholder='Email' ref={email}/>
-            <input type="password" placeholder='Password' ref={password} />
-            <button type="submit" onClick={handleSubmit}>Register</button>
-        </form>
+    <div className="auth-card">
+      <h2>Register</h2>
+      <form onSubmit={submit}>
+        <input value={name} onChange={e => setName(e.target.value)} placeholder="Full name" />
+        <input value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" />
+        <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
+        <button type="submit">Register</button>
+      </form>
+      <p>Already have an account? <Link to="/login">Login</Link></p>
     </div>
-  )
+  );
 }
-
-export default Register
